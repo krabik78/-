@@ -1,0 +1,39 @@
+interface OrderService {
+    public function createOrder(User $user, array $items);
+    public function getOrderStatus(Order $order);
+}
+class OrderController {
+    private $orderService;
+
+    public function __construct(OrderService $orderService) {
+        $this->orderService = $orderService;
+    }
+
+    public function createOrder(Request $request) {
+        $user = $request->user;
+        $items = $request->items;
+        $order = $this->orderService->createOrder($user, $items);
+        return response()->json(['order_id' => $order->id]);
+    }
+
+    public function getOrderStatus(Request $request, $orderId) {
+        $order = Order::find($orderId);
+        $status = $this->orderService->getOrderStatus($order);
+        return response()->json(['status' => $status]);
+    }
+}
+class OrderServiceImpl implements OrderService {
+    private $logisticSystem;
+
+    public function __construct(LogisticSystem $logisticSystem) {
+        $this->logisticSystem = $logisticSystem;
+    }
+
+    public function createOrder(User $user, array $items) {
+        // Логика создания заказа
+    }
+
+    public function getOrderStatus(Order $order) {
+        // Получение статуса заказа через логистическую систему
+    }
+}
